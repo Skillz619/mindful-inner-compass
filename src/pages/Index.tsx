@@ -6,6 +6,7 @@ import Meditation from '@/components/Meditation';
 import Journal from '@/components/Journal';
 import Breathing from '@/components/Breathing';
 import Resources from '@/components/Resources';
+import VirtualPet from '@/components/VirtualPet';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -25,17 +26,19 @@ const Index = () => {
         </div>
       </section>
 
-      <section className="mb-8">
+      <section className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-8">
         <MoodTracker />
+        <VirtualPet />
       </section>
 
       <section>
         <Tabs defaultValue="meditation" className="w-full">
-          <TabsList className="grid grid-cols-4 mb-8">
+          <TabsList className="grid grid-cols-5 mb-8">
             <TabsTrigger value="meditation">Meditation</TabsTrigger>
             <TabsTrigger value="journal">Journal</TabsTrigger>
             <TabsTrigger value="breathing">Breathing</TabsTrigger>
             <TabsTrigger value="resources">Resources</TabsTrigger>
+            <TabsTrigger value="reports">Reports</TabsTrigger>
           </TabsList>
           <TabsContent value="meditation" className="animate-fade-in">
             <Meditation />
@@ -48,6 +51,22 @@ const Index = () => {
           </TabsContent>
           <TabsContent value="resources" className="animate-fade-in">
             <Resources />
+          </TabsContent>
+          <TabsContent value="reports" className="animate-fade-in">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-2xl font-semibold text-gradient">Mental Health Reports</CardTitle>
+                <CardDescription>Track your progress and identify patterns</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground mb-4">
+                  Monthly reports will be available once you've tracked your mood and activities for at least 7 days.
+                </p>
+                <div className="bg-calm-50 dark:bg-calm-800/20 p-6 rounded-lg text-center">
+                  <p>Continue tracking your mood and completing activities to generate insights.</p>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </section>
