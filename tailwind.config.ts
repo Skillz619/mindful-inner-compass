@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,32 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Mental health app custom colors
+				calm: {
+					50: '#f6f5ff',
+					100: '#e9eaff',
+					200: '#d6d8ff',
+					300: '#b8baff',
+					400: '#9b87f5',
+					500: '#7762e3',
+					600: '#6e59a5',
+					700: '#5a4d8c',
+					800: '#3d3b5f',
+					900: '#1A1F2C',
+				},
+				soothing: {
+					50: '#f2fcf5',
+					100: '#e6f9f0',
+					200: '#bff0da',
+					300: '#a3e0cd',
+					400: '#63c3ab',
+					500: '#45a996',
+					600: '#308b7c',
+					700: '#2a6f65',
+					800: '#235752',
+					900: '#1e4945',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +110,48 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(10px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				'pulse-gentle': {
+					'0%, 100%': {
+						opacity: '1',
+						transform: 'scale(1)'
+					},
+					'50%': {
+						opacity: '0.9',
+						transform: 'scale(1.02)'
+					}
+				},
+				'breathe-in': {
+					'0%': {
+						transform: 'scale(1)',
+					},
+					'50%': {
+						transform: 'scale(1.4)',
+					},
+					'100%': {
+						transform: 'scale(1)',
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.5s ease-out',
+				'pulse-gentle': 'pulse-gentle 6s infinite ease-in-out',
+				'breathe-in': 'breathe-in 8s infinite ease-in-out',
+			},
+			fontFamily: {
+				sans: ['Inter', 'sans-serif'],
 			}
 		}
 	},
