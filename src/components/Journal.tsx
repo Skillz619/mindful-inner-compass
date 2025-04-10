@@ -6,8 +6,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar as CalendarIcon, Mic, MicOff, Save } from 'lucide-react';
+import { Calendar as CalendarIcon, Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import AudioRecorder from './AudioRecorder';
 
 interface JournalEntry {
   id: string;
@@ -34,10 +35,7 @@ const Journal = () => {
   
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [currentEntry, setCurrentEntry] = useState('');
-  const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<BlobPart[]>([]);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -96,53 +94,12 @@ const Journal = () => {
     setAudioUrl(null);
   };
 
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      audioChunksRef.current = [];
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunksRef.current.push(event.data);
-        }
-      };
-
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/mp3' });
-        const url = URL.createObjectURL(audioBlob);
-        setAudioUrl(url);
-        
-        // Transcribe audio to text (in a real app, this would call an API)
-        toast({
-          title: "Audio recorded",
-          description: "Your voice entry has been recorded. You can play it back or save it with your journal entry.",
-        });
-      };
-
-      mediaRecorder.start();
-      setIsRecording(true);
-    } catch (error) {
-      console.error('Error accessing microphone:', error);
-      toast({
-        title: "Microphone access denied",
-        description: "Please allow access to your microphone to record audio entries.",
-        variant: "destructive",
-      });
-    }
+  const handleAudioSaved = (url: string) => {
+    setAudioUrl(url);
   };
 
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-      
-      // Stop all audio tracks
-      if (mediaRecorderRef.current.stream) {
-        mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
-      }
-    }
+  const clearAudio = () => {
+    setAudioUrl(null);
   };
 
   const getPrompt = (): string => {
@@ -191,20 +148,12 @@ const Journal = () => {
           <p className="text-sm italic text-muted-foreground">Prompt: {getPrompt()}</p>
         </div>
         
-        <div className="flex items-center gap-2 mb-4">
-          <Button 
-            variant={isRecording ? "destructive" : "outline"} 
-            size="sm" 
-            className="flex items-center gap-2"
-            onClick={isRecording ? stopRecording : startRecording}
-          >
-            {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-            {isRecording ? "Stop Recording" : "Record Audio"}
-          </Button>
-          
-          {audioUrl && (
-            <audio src={audioUrl} controls className="w-full h-10" />
-          )}
+        <div className="mb-4">
+          <AudioRecorder 
+            onAudioSaved={handleAudioSaved}
+            onClear={clearAudio}
+            audioUrl={audioUrl}
+          />
         </div>
         
         <Textarea 
